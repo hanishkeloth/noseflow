@@ -28,7 +28,7 @@ Open the local address printed by Vite. Camera access needs localhost or HTTPS. 
 npm run build
 ```
 
-The included Vinext/Cloudflare build produces a Worker deployment, not a GitHub Pages static export. The public template omits the hosted Site identity.
+`npm run build` produces the Vinext/Cloudflare Worker deployment. For free static hosting, use `npm run build:pages` (see below). The public template omits the hosted Site identity.
 
 ## fal setup and privacy
 
@@ -72,4 +72,17 @@ See [current fal pricing](https://fal.ai/models/minimax/h3-max-turbo/image-to-vi
 
 ### Deployment
 
-This repository is a Vinext/Cloudflare Worker app. It is not a static GitHub Pages export. Deploy the verified `dist/server/index.js` Worker and `dist/client` assets with a compatible Cloudflare deployment flow. The public template's `.openai/hosting.json` has no private Site project identity. CI validates the project but does not deploy or consume fal credits.
+Two build targets reuse the same playground:
+
+- **GitHub Pages:** `npm run build:pages` outputs static files in `dist-pages`. No server, secrets or paid hosting account required. Preview with `npm run preview:pages` and open the printed URL at `/noseflow/`.
+- **Cloudflare Worker:** `npm run build` outputs `dist/server/index.js` and `dist/client` assets. The public `.openai/hosting.json` has no private Site project identity.
+
+#### Enable free GitHub Pages hosting
+
+1. In [repository Settings → Pages](https://github.com/hanishkeloth/noseflow/settings/pages), set **Build and deployment → Source → GitHub Actions**.
+2. Open [Deploy GitHub Pages](https://github.com/hanishkeloth/noseflow/actions/workflows/pages.yml), choose **Run workflow** on `main`. Later pushes to `main` deploy automatically.
+3. After a successful deployment, the expected demo address is `https://hanishkeloth.github.io/noseflow/`.
+
+[GitHub Pages is available for public repositories on GitHub Free](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). Hosting and local nose/pointer controls require no fal key. Optional image/video generation is billed separately by fal; the deployment workflow never generates media or embeds a key.
+
+`vite.pages.config.ts` defaults to `/noseflow/`. For another repository or a custom domain, set `PAGES_BASE_PATH` to your site's path (for example `/my-repo/` or `/`). The workflow reads this from GitHub Pages automatically. Static hosting serves only the playground; Worker/auth routes are not included.
