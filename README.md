@@ -1,17 +1,51 @@
-# Noseflow
+# Noseflow — Nose-Controlled Three.js Playground
 
-**A living Three.js canvas that follows your nose.**
+**Move your head. Make light dance.**
 
-An MIT-licensed interactive design template by [Hanish Keloth](https://github.com/hanishkeloth). Four animated worlds, local face tracking, pointer/touch fallback, and fal-generated atmospheres.
+An open-source interactive web design template by [Hanish Keloth](https://github.com/hanishkeloth). Shape animated particles and luminous 3D ribbons with your nose, mouse, touch or keyboard. Add optional AI-generated image and video backdrops with fal.
+
+**[Try the live demo →](https://hanishkeloth.github.io/noseflow/)** · [Quick start](#run) · [Contribute](CONTRIBUTING.md) · [MIT license](LICENSE)
+
+## About Noseflow
+
+Noseflow combines **Three.js WebGL graphics**, **MediaPipe face tracking** and **fal image/video generation** in a React playground. Face landmarks are processed locally in your browser. Camera access is optional, and you can explore all four scenes without an account or API key.
+
+Use it as a starting point for an interactive portfolio hero, an experimental landing page, a creative-coding demo or a browser-based motion experience. The source includes shaders, calibrated nose input, animation controls and a static GitHub Pages build.
+
+## Try it in 30 seconds
+
+1. [Open Noseflow](https://hanishkeloth.github.io/noseflow/) and move your pointer or drag on the canvas.
+2. Select **Lightfield**, **Aurora bloom**, **Orbital silk** or **Solar current**.
+3. For head-driven motion, select **Enable nose tracking**, allow your camera, look straight ahead and select **Recenter motion**.
+4. Adjust speed, expansion and sensitivity. Pause anytime, or export the transparent 3D canvas as a PNG.
 
 ## Features
 
-- 18,000 additive particles: Aurora bloom, Orbital silk, Solar current.
-- Smoothed nose-tip input using MediaPipe Face Landmarker; camera permission is opt-in.
-- Speed, expansion and sensitivity controls; pause; reduced-motion preference.
-- fal FLUX.1 schnell text-to-image atmosphere generation using your own key.
-- PNG export of the transparent particle canvas (background and UI are excluded).
-- Responsive desktop and mobile layout.
+- **Four animated scenes:** shader-driven particles and Lightfield's luminous 3D ribbons with camera parallax.
+- **Local nose tracking:** MediaPipe Face Landmarker, calibrated neutral pose and smoothed input.
+- **Camera-free controls:** mouse, touch and arrow keys; press R to recenter.
+- **Motion controls:** speed, expansion, sensitivity, pause and reduced-motion preference.
+- **Optional fal backdrops:** FLUX schnell still images and H3 Max Turbo image-to-video, using your own fal credits.
+- **Transparent PNG export:** captures the 3D canvas; background media and UI are excluded.
+- **Responsive interface:** layouts for desktop and mobile.
+- **Free static hosting:** GitHub Pages deployment workflow included.
+
+## Common questions
+
+**Is Noseflow free and open source?**  
+The original code is MIT licensed. The public demo and local motion controls need no payment or fal key. Optional AI generation uses your fal credits; third-party libraries, models and generated assets have their own terms.
+
+**Are webcam images uploaded?**  
+No. Face tracking processes webcam frames locally. The browser downloads MediaPipe modules and its model. Only prompts and generated stills selected for animation are sent to fal.
+
+**Does it work without a webcam?**  
+Yes. Use your mouse, touch or keyboard. Tracking requires camera permission and a compatible browser on HTTPS or localhost.
+
+**Does it use WebGPU?**  
+Noseflow currently uses Three.js WebGL. It does not require WebGPU.
+
+**Can I use it in a commercial project?**  
+The MIT license permits commercial reuse of the original code when its notice is retained. Check the separate terms for third-party models and any generated media you include.
 
 ## Run
 
@@ -38,7 +72,7 @@ Camera frames are processed locally by MediaPipe. Text prompts and previously ge
 
 ## Remix
 
-`app/page.tsx` contains the particle scenes, input smoothing, tracking lifecycle, controls and fal queue integration. `app/globals.css` controls the visual theme and responsive layout. Change the preset functions to introduce a new form, and preserve the pointer fallback and camera cleanup.
+`app/page.tsx` contains the interface, tracking lifecycle and fal queue integration. `lib/scene.mjs` contains the geometry and shaders; `lib/motion.mjs` contains input smoothing, calibration and URL validation. `app/globals.css` controls the visual theme and responsive layout. Change the preset functions to introduce a new form, and preserve the pointer fallback and camera cleanup.
 
 ## Research direction
 
