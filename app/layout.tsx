@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Noseflow — Motion playground",
+  title: "Noseflow Tilt Studio — Motion playground",
   description: "A Three.js motion playground controlled by your nose. Made by Hanish Keloth.",
   icons: {
     icon: "/favicon.svg",

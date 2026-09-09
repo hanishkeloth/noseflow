@@ -28,6 +28,9 @@ test("renders the Lightfield controls and explicit camera opt-in", async () => {
   );
   const html=await response.text();
   assert.match(html, /Lightfield/);
+  assert.match(html, /Tilt Studio/);
+  assert.match(html, /Explore the finish/);
+  assert.match(html, /Iridescent/);
   assert.match(html, /Enable nose tracking/);
   assert.match(html, /Animate backdrop/);
 });

@@ -8,20 +8,20 @@ An open-source interactive web design template by [Hanish Keloth](https://github
 
 ## About Noseflow
 
-Noseflow combines **Three.js WebGL graphics**, **MediaPipe face tracking** and **fal image/video generation** in a React playground. Face landmarks are processed locally in your browser. Camera access is optional, and you can explore all four scenes without an account or API key.
+Noseflow combines **Three.js WebGL graphics**, **MediaPipe face tracking** and **fal image/video generation** in a React playground. Face landmarks are processed locally in your browser. Camera access is optional, and you can explore all five scenes without an account or API key.
 
 Use it as a starting point for an interactive portfolio hero, an experimental landing page, a creative-coding demo or a browser-based motion experience. The source includes shaders, calibrated nose input, animation controls and a static GitHub Pages build.
 
 ## Try it in 30 seconds
 
 1. [Open Noseflow](https://hanishkeloth.github.io/noseflow/) and move your pointer or drag on the canvas.
-2. Select **Lightfield**, **Aurora bloom**, **Orbital silk** or **Solar current**.
+2. Start with **Tilt Studio** and try its Satin, Iridescent and Reflective finishes, or select **Lightfield**, **Aurora bloom**, **Orbital silk** or **Solar current**.
 3. For head-driven motion, select **Enable nose tracking**, allow your camera, look straight ahead and select **Recenter motion**.
 4. Adjust speed, expansion and sensitivity. Pause anytime, or export the transparent 3D canvas as a PNG.
 
 ## Features
 
-- **Four animated scenes:** shader-driven particles and Lightfield's luminous 3D ribbons with camera parallax.
+- **Five animated scenes:** shader-driven particles, Lightfield's luminous 3D ribbons and Tilt Studio's angle-sensitive material card.
 - **Local nose tracking:** MediaPipe Face Landmarker, calibrated neutral pose and smoothed input.
 - **Camera-free controls:** mouse, touch and arrow keys; press R to recenter.
 - **Motion controls:** speed, expansion, sensitivity, pause and reduced-motion preference.
@@ -80,7 +80,7 @@ This first edition combines shader-like additive particle aesthetics, input-driv
 
 ## Validation and limits
 
-Production build validated in the authoring environment. Webcam permission, live face tracking, CDN loading and paid fal generation require testing on actual target devices; no claim of end-to-end browser validation is made. Devices with weak GPUs may need a lower particle count. Face inference runs at approximately 15 Hz on the main thread and can cause jank on slow devices; a worker is a useful production improvement.
+Production build validated in the authoring environment. Webcam permission, live face tracking, CDN loading and paid fal generation require testing on actual target devices; no claim of end-to-end browser validation is made. Devices with weak GPUs may need a lower particle count. Face inference now runs in a dedicated worker at up to approximately 12 Hz with downscaled frames and one inference in flight. If worker/model initialization or frame processing fails, the camera stops and pointer/touch/keyboard controls remain available. This worker path has lifecycle unit tests but still needs real-camera validation across Safari, Chrome and mobile devices.
 
 ## License
 
@@ -120,3 +120,15 @@ Two build targets reuse the same playground:
 [GitHub Pages is available for public repositories on GitHub Free](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site). Hosting and local nose/pointer controls require no fal key. Optional image/video generation is billed separately by fal; the deployment workflow never generates media or embeds a key.
 
 `vite.pages.config.ts` defaults to `/noseflow/`. For another repository or a custom domain, set `PAGES_BASE_PATH` to your site's path (for example `/my-repo/` or `/`). The workflow reads this from GitHub Pages automatically. Static hosting serves only the playground; Worker/auth routes are not included.
+
+## Tilt Studio update (v0.3)
+
+The default fifth scene is a rounded, procedural material card with Satin, Iridescent and Reflective finishes. Local head or pointer movement tilts the card and shifts the camera; the Studio light slider separately moves its key light. Three.js is pinned to r186, released September 8, 2026. The reflective finish uses MeshPhysicalMaterial.retroreflectivity. These are illustrative materials, not scanned textiles or measured product simulations. [r186 release](https://github.com/mrdoob/three.js/releases/tag/r186).
+
+- The original four scenes remain available with their dark theme. Tilt Studio has a light editorial theme.
+- Tracking uses a same-origin classic worker that dynamically loads pinned MediaPipe modules; camera data is processed locally. Initialization has a timeout, setup can be cancelled, and queued results cannot update a stopped session. Unsupported tracking falls back to camera-free controls rather than main-thread inference.
+- Slow sustained frame times reduce pixel ratio to 1 for the rest of the session. This is a protective heuristic, not a performance guarantee.
+- Pause freezes autonomous scene time; deliberate pointer/head input still works. Changes to reduced-motion preference pause animation and video.
+- fal remains opt-in and BYOK; no requests are triggered by movement or finish changes. No generated assets are bundled.
+
+Validation: both build targets and automated tests must pass. The worker transport is tested with mocks; live webcam permissions, actual WASM initialization, GPU appearance and paid fal calls need target-device testing. No browser/device benchmark is claimed. Original code remains MIT; MediaPipe and model assets retain their own terms.
