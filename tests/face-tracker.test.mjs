@@ -7,7 +7,7 @@ function environment(t){
   const saved=names.map(name=>Object.getOwnPropertyDescriptor(globalThis,name));
   t.after(()=>names.forEach((name,i)=>saved[i]?Object.defineProperty(globalThis,name,saved[i]):delete globalThis[name]));
   let worker, callback;
-  globalThis.document={baseURI:'https://example.com/noseflow/',hidden:false};
+  globalThis.document={baseURI:'https://example.com/noseflow/',hidden:false,addEventListener(){},removeEventListener(){}};
   globalThis.Worker=class{constructor(url){this.url=url;this.sent=[];worker=this;}postMessage(data){this.sent.push(data);}terminate(){this.terminated=true;}};
   globalThis.createImageBitmap=async()=>({close(){this.closed=true;}});
   globalThis.requestAnimationFrame=fn=>{callback=fn;return 1;};

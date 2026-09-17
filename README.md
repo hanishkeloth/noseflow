@@ -132,3 +132,21 @@ The default fifth scene is a rounded, procedural material card with Satin, Iride
 - fal remains opt-in and BYOK; no requests are triggered by movement or finish changes. No generated assets are bundled.
 
 Validation: both build targets and automated tests must pass. The worker transport is tested with mocks; live webcam permissions, actual WASM initialization, GPU appearance and paid fal calls need target-device testing. No browser/device benchmark is claimed. Original code remains MIT; MediaPipe and model assets retain their own terms.
+
+## Orbit Recorder update (v0.4)
+
+**Record a camera move, replay it, and remix the path.** In the Orbit Recorder panel, choose **Record take**, move your head or pointer for five seconds, then use **Replay**. Touch and focused-canvas arrow keys work too. The distance slider is available to every input method; face depth is not estimated. Record and Replay bring the canvas into view on small screens.
+
+The recorder samples smoothed, calibrated input at up to 30 Hz for the full five seconds (about 151 poses), then preserves endpoints and the strongest turns in 2–12 keyframes. It does not use a rolling 30-sample buffer, which would lose most of a take. Edit azimuth, elevation and distance, remove interior frames, download **Path JSON**, or clear the take. Times are normalized from 0 to 1. Paths contain camera coordinates only, not webcam images, landmarks, keys or identity data. Paths are kept in memory until downloaded; refreshing discards them.
+
+During recording/replay, autonomous 3D animation and object tilt freeze at a neutral pose; the camera alone moves. Replay is a linear interpolation of the simplified path, so it approximates the full take. Scene selection, finish and lighting are not stored in path JSON. Existing AI video backdrops are independent and are not part of the recording. This is camera-path export, not GIF/MP4 capture or an exact render of an AI-generated video. Reduced motion continues to pause ambient animation; recording and replay require explicit clicks.
+
+### Optional fal camera recipe
+
+**fal recipe** downloads an endpoint/input JSON template for [`minimax/h3-max/camera-controls`](https://fal.ai/models/minimax/h3-max/camera-controls/api), using a five-second 768P trajectory. Replace `REPLACE_WITH_PUBLIC_SCENE_STILL_URL` with an image you own or may use, then submit from your own backend with your own key. Check current pricing and model/output terms before submission. No new API request, upload or charge occurs when recording, replaying, editing or downloading. Do not embed a shared fal key in GitHub Pages. Original code remains MIT; model and media terms are separate.
+
+### Lifecycle and validation
+
+Renderer and tracking frame loops cancel scheduled work when the document is hidden or the canvas is offscreen, then resume without accumulating animation time. An interrupted recording is discarded while a previous completed take remains available. One already-submitted tracking inference may finish; its hidden result is ignored. The camera stream remains open until **Turn camera off**, keeping resume explicit and predictable.
+
+Automated coverage checks full-duration retention, bounded keyframe reduction, replay interpolation, invalid edits, interrupted takes, export data minimization, frame-loop suspension/resumption and rendered controls. Both build targets must pass. Live webcam/device performance and paid fal jobs require separate testing. Surface Stories and PBR map import/atomic swapping remain research proposals; they are not included in this release. Tilt Studio reuses its existing prebuilt materials and disposes them with the scene.

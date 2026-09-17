@@ -33,4 +33,7 @@ test("renders the Lightfield controls and explicit camera opt-in", async () => {
   assert.match(html, /Iridescent/);
   assert.match(html, /Enable nose tracking/);
   assert.match(html, /Animate backdrop/);
+  assert.match(html, /Orbit Recorder/);
+  assert.match(html, /Record take/);
+  assert.match(html, /Camera distance/);
 });

@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createFrameLoop} from '../lib/frame-loop.mjs';
+test('one RAF loop suspends offscreen/hidden and cannot revive after disposal',t=>{
+ const names=['document','IntersectionObserver','requestAnimationFrame','cancelAnimationFrame'];
+ const saved=names.map(n=>Object.getOwnPropertyDescriptor(globalThis,n));
+ t.after(()=>names.forEach((n,i)=>saved[i]?Object.defineProperty(globalThis,n,saved[i]):delete globalThis[n]));
+ let visibility,intersection,id=0,calls=0,suspends=0,disconnected=false;const queued=new Map();
+ globalThis.document={hidden:false,addEventListener(_,fn){visibility=fn},removeEventListener(){visibility=null}};
+ globalThis.IntersectionObserver=class {constructor(fn){intersection=fn}observe(){}disconnect(){disconnected=true}};
+ globalThis.requestAnimationFrame=fn=>{queued.set(++id,fn);return id};globalThis.cancelAnimationFrame=n=>queued.delete(n);
+ const advance=()=>{const [n,fn]=queued.entries().next().value;queued.delete(n);fn(100)};
+ const loop=createFrameLoop(()=>calls++,{element:{},onSuspend:()=>suspends++});loop.start();loop.start();
+ assert.equal(queued.size,1);advance();assert.equal(calls,1);assert.equal(queued.size,1);
+ intersection([{isIntersecting:false}]);assert.equal(queued.size,0);assert.equal(loop.isVisible(),false);
+ document.hidden=true;visibility();intersection([{isIntersecting:true}]);assert.equal(queued.size,0);
+ document.hidden=false;visibility();visibility();assert.equal(queued.size,1);advance();assert.equal(calls,2);
+ loop.dispose();assert.equal(queued.size,0);assert.equal(visibility,null);assert.ok(disconnected&&suspends>0);
+ intersection([{isIntersecting:true}]);loop.start();assert.equal(queued.size,0);
+});
